@@ -14,7 +14,18 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::post('/add', [HomeController::class, 'add'])->name('add');
-Route::post('/edit/{id}', [HomeController::class, 'edit'])->name('edit');
-Route::post('/remove/{id}', [HomeController::class, 'remove'])->name('remove');
+Route::get('/', function() {
+  // return view('auth/login');
+  return redirect()->route('login');
+});
+Route::middleware(['auth'])->group(function () {
+  Route::get('/home', [HomeController::class, 'index'])->name('home');
+  Route::get('/get', [HomeController::class, 'get'])->name('get');
+  Route::post('/add', [HomeController::class, 'add'])->name('add');
+  Route::post('/edit/{id}', [HomeController::class, 'edit'])->name('edit');
+  Route::post('/remove/{id}', [HomeController::class, 'remove'])->name('remove');
+  Route::post('/complete/{id}', [HomeController::class, 'complete'])->name('complete');
+});
+
+
+Auth::routes();

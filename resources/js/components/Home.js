@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 
 function Todo() {
-  const [todos, setTodos] = useState(todosObject);
+  const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
+
+  useEffect(() => {
+    axios.get('/get')
+    .then(function (response) {
+        console.log(response.data);
+        setTodos(response.data);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+  }, []);
 
   const handleChange = (event) => {
     if (event.target.value == "") {
@@ -31,8 +42,7 @@ function Todo() {
     axios.post(url, {})
     .then(function (response) {
         console.log(response.data);
-        todosObject = todosObject.filter(todo => todo.id != removeId);
-        setTodos(todosObject);
+        setTodos(todos.filter(todo => todo.id != removeId));
     })
     .catch(function (error) {
         console.log(error);
@@ -50,8 +60,7 @@ function Todo() {
     .then(function (response) {
       document.getElementById("setTodo").value = "";
       // console.log(response.data, " new");
-      todosObject.push({id: response.data, todo: newTodo});
-      setTodos(todosObject);
+      setTodos([...todos, {id: response.data, todo: newTodo}]);
       setNewTodo('');
     })
     .catch(function (error) {
@@ -81,6 +90,6 @@ function Todo() {
 
 export default Todo;
 
-if (document.getElementById('todos')) {
-  ReactDOM.render(<Todo />, document.getElementById('todos'));
-}
+// if (document.getElementById('todos')) {
+//   ReactDOM.render(<Todo />, document.getElementById('todos'));
+// }

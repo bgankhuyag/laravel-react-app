@@ -15,7 +15,9 @@ class CreateTodoTable extends Migration
     {
         Schema::create('todo', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('users_id')->constrained('users');
             $table->string('todo')->nullable(false);
+            $table->boolean('complete')->default(0);
             $table->timestamps();
         });
     }
